@@ -4,8 +4,7 @@ using MongoDB.Driver;
 namespace com.tweetapp.Services
 {
 
-    public class UserService : IUserService
-        
+    public class UserService : IUserService        
     {
         private readonly IMongoCollection<User> _users;
         public UserService(ITweetAppDatabaseSettings settings,IMongoClient mongoClient)
@@ -27,6 +26,7 @@ namespace com.tweetapp.Services
         public User getUser(string loginId)
         {
             return _users.Find(user => user.LoginId == loginId).FirstOrDefault();
+            
         }
 
         public User login(string loginId, string password)

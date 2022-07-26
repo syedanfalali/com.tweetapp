@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace com.tweetapp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1.0/[controller]")]
     [ApiController]
     public class TweetsController : ControllerBase
     {
@@ -17,6 +17,7 @@ namespace com.tweetapp.Controllers
         }
 
         // GET: api/<UserController>
+        [Route("users/all")]
         [HttpGet]
         public ActionResult<List<User>> Get()
         {
@@ -24,7 +25,8 @@ namespace com.tweetapp.Controllers
         }
 
         // GET api/<UserController>/5
-        [HttpGet("{LoginId}")]
+       // [Route("search")]
+        [HttpGet("search/{loginId}")]
 
         public ActionResult<User> Get(string loginId)
         {
@@ -36,7 +38,26 @@ namespace com.tweetapp.Controllers
             return user;
         }
 
+       
+        [HttpGet("login/{loginId}/{password}")]
+
+        public ActionResult<User> Login(string loginId, string password)
+        {
+            var user = userService.getUser(loginId);
+            if (user == null)
+            {
+                return NotFound("No user found");
+            }
+            else if(user.Password == password)
+            {
+                return user;
+
+            }
+            return NotFound("Incorrect Password");
+        }
+
         // POST api/<UserController>
+        [Route("register")]
         [HttpPost]
         public ActionResult<User> Post([FromBody] User user)
         {
@@ -45,7 +66,8 @@ namespace com.tweetapp.Controllers
         }
             
         // PUT api/<UserController>/5
-        [HttpPut("{id}")]
+       // [Route("{LoginId}/forgot")]
+        [HttpPut("{loginid}/forgot")]
         public ActionResult Put(string loginid, [FromBody] User user)
         {
             var existingUser = userService.getUser(loginid);
