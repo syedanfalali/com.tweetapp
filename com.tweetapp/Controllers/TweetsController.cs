@@ -11,9 +11,75 @@ namespace com.tweetapp.Controllers
     public class TweetsController : ControllerBase
     {
         private readonly IUserService userService;
-        public TweetsController(IUserService userService)
+        private readonly ITweetService tweetService;
+        public TweetsController(IUserService userService, ITweetService tweetService)
         {
             this.userService = userService;
+            this.tweetService = tweetService;
+        }
+        [Route("all")]
+        [HttpGet]
+        public ActionResult<List<Tweet>> GetAllTweets()
+        {
+            return tweetService.GetAll();
+        }
+
+        [HttpGet("{LoginId}")]
+        public ActionResult<List<Tweet>> GetUserTweets(string LoginId)
+        {
+            return tweetService.GetUserTweets(LoginId);
+        }
+        
+        [HttpPost("{LoginId}/add")]
+        public ActionResult<Tweet> Add(string LoginId, Tweet tweet)
+        {
+            tweet.LoginId = LoginId; 
+            return tweetService.Post(tweet);
+        }
+
+
+        [HttpPut("update/{Id}")]
+        public ActionResult<Tweet> UpdateTweet(string Id , Tweet tweet)
+        {
+
+            return tweetService.Update(Id, tweet);
+        }
+
+        [HttpDelete("delete/{Id}")]
+        public ActionResult<string> DeleteTweet( string Id)
+        {
+            tweetService.Delete(Id);
+            return "Deleted";
+        }
+        [HttpPut("like/{Id}")]
+        public ActionResult<string> Like(string Id, string LoginId)
+        {
+            Tweet tweet = tweetService.GetSpecificTweet(Id);
+            
+            if(tweet.Likes == null)
+            {
+                tweet.Likes = new List<string>();
+                tweet.Likes.Add(LoginId);
+                tweetService.Update(Id, tweet);
+                return "Liked by " + LoginId;
+            }
+            return "Exception";
+
+            
+
+            
+
+            
+
+        }
+
+        [HttpPost("reply/{Id}")]
+        public ActionResult<Tweet> Reply(string Id, Tweet tweet)
+        {
+            tweet.Type = "Reply";
+            tweet.ReplyOf = tweetService.GetSpecificTweet(Id);
+            tweetService.Reply(Id, tweet);
+            return tweet;
         }
 
         // GET: api/<UserController>

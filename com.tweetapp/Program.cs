@@ -19,6 +19,7 @@ new MongoClient(builder.Configuration.GetValue<string>("TweetAppDatabaseSettings
 ));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITweetService, TweetService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
