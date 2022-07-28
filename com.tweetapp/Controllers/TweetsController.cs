@@ -59,18 +59,11 @@ namespace com.tweetapp.Controllers
             if(tweet.Likes == null)
             {
                 tweet.Likes = new List<string>();
-                tweet.Likes.Add(LoginId);
-                tweetService.Update(Id, tweet);
-                return "Liked by " + LoginId;
+                
             }
-            return "Exception";
-
-            
-
-            
-
-            
-
+            tweet.Likes.Add(LoginId);
+            tweetService.Update(Id, tweet);
+            return "Liked by " + LoginId;
         }
 
         [HttpPost("reply/{Id}")]
